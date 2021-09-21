@@ -1,0 +1,18 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    
+    <form method="post" asp-page-handler="create">
+        <button class="btn btn-primary">Create Room</button>
+    </form>
+
+    <form method="post" asp-page-handler="join">
+        <input type="text" name="roomId" placeholder="id here"/>
+        <button class="btn btn-primary">Join</button>
+    </form>
+</div>
