@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pratz.Web.Data;
+using Pratz.Web.Services;
 
 namespace Pratz.Web
 {
@@ -28,6 +29,7 @@ namespace Pratz.Web
             services.AddSignalR();
 
             services.AddScoped<IVoteRoomRepository, InMemoryVoteRoomRepository>();
+            services.AddScoped<IIdGenerator, IdGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

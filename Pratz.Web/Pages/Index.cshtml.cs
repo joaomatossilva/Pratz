@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Pratz.Web.Data;
+using Pratz.Web.Services;
 
 namespace Pratz.Web.Pages
 {
@@ -13,11 +14,13 @@ namespace Pratz.Web.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IVoteRoomRepository voteRoomRepository;
+        private readonly IIdGenerator idGenerator;
 
-        public IndexModel(ILogger<IndexModel> logger, IVoteRoomRepository voteRoomRepository)
+        public IndexModel(ILogger<IndexModel> logger, IVoteRoomRepository voteRoomRepository, IIdGenerator idGenerator)
         {
             _logger = logger;
             this.voteRoomRepository = voteRoomRepository;
+            this.idGenerator = idGenerator;
         }
 
         public void OnGet()
@@ -27,7 +30,8 @@ namespace Pratz.Web.Pages
 
         public async Task<IActionResult> OnPostCreate()
         {
-            var room = new Room { Id = "teste" };
+            var id = idGenerator.GenerateId();
+            var room = new Room { Id = id };
             await voteRoomRepository.CreateRoom(room);
             return RedirectToPage("Room", new { id = room.Id });
         }

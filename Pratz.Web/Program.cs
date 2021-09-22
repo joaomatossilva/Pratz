@@ -16,6 +16,7 @@ namespace Pratz.Web
             CreateHostBuilder(args).Build().Run();
         }
 
+        //just took entire method from SO. Not tested performance wise
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
