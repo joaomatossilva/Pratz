@@ -1,0 +1,17 @@
+﻿@page
+@model Pratz.Web.Pages.ProfileModel
+@{
+    ViewData["Title"] = "Profile";
+}
+<div class="text-center">
+    <h1 class="display-4">Your Profile</h1>
+
+    <form method="post">
+        <input type="text" name="userName" value="@Model.UserName" />
+        <button class="btn btn-primary">Set</button>
+    </form>
+
+</div>
+
+
+
