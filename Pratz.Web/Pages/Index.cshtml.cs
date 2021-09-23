@@ -25,7 +25,7 @@ namespace Pratz.Web.Pages
 
         public void OnGet()
         {
-
+            _logger.LogInformation("random message");
         }
 
         public async Task<IActionResult> OnPostCreate()

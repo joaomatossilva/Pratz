@@ -19,6 +19,11 @@ namespace Pratz.Web
         //just took entire method from SO. Not tested performance wise
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging((context, builder) =>
+                {
+                    var path = context.HostingEnvironment.ContentRootPath;
+                    builder.AddLog4Net($"{path}/log4net.config");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
