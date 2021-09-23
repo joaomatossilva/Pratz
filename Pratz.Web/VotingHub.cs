@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Pratz.Web.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pratz.Web
@@ -10,15 +8,18 @@ namespace Pratz.Web
     public class VotingHub : Hub
     {
         private readonly IVoteRoomRepository voteRoomRepository;
+        private readonly ILogger<VotingHub> logger;
 
-        public VotingHub(IVoteRoomRepository voteRoomRepository)
+        private VotingHub(IVoteRoomRepository voteRoomRepository)
         {
             this.voteRoomRepository = voteRoomRepository;
         }
 
         //TODO: handle injection properly
-        public VotingHub()
-            :this(new InMemoryVoteRoomRepository()) { }
+        public VotingHub(ILogger<VotingHub> logger)
+            :this(new InMemoryVoteRoomRepository()) {
+            this.logger = logger;
+        }
 
         public async Task Vote(string value)
         {
@@ -27,11 +28,18 @@ namespace Pratz.Web
 
         public async override Task OnConnectedAsync()
         {
-            var groupName = "a";
-            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, groupName);
+            var roomId = Context.GetHttpContext().Request.Query["roomId"];
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomId);
 
             var userName = this.Context.User.Identity.Name;
-            //TODO: alert owner client connected
+            await voteRoomRepository.AddMember(roomId, new RoomMember
+            {
+                ConnectionId = Context.ConnectionId,
+                UserId = Context.UserIdentifier,
+                UserName = userName
+            });
+
+            await this.Clients.AllExcept(this.Context.ConnectionId).SendAsync("UserJoined", userName);
         }
     }
 }

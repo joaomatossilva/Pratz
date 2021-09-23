@@ -22,6 +22,12 @@ namespace Pratz.Web.Pages
 
         public async Task<IActionResult> OnGet(string id)
         {
+            //If first access is unauthenticated, ask for a name first
+            if(User?.Identity.IsAuthenticated != true)
+            {
+                return RedirectToPage("Profile", new { room = id });
+            }
+
             var room = await voteRoomRepository.GetRoom(id);
             if (room is null)
             {

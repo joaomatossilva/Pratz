@@ -6,3 +6,10 @@
 
 <h1>Room</h1>
 
+@section Scripts {
+    <script type="text/javascript">
+        var roomId = '@Model.Room.Id';
+    </script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/room.js"></script>
+}
