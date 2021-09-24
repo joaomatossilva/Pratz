@@ -26,12 +26,35 @@ connection.on("UserJoined", function (room, userName, userId) {
     });
 });
 
+connection.on("StartNewVote", (name) => {
+    $(".voting").show();
+});
+
 connection.start().then(function () {
     //Do things
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
+$("#submit-vote").click(e => {
+    var value = $("#vote-value").val();
+    if (value.length > 0) {
+        connection.invoke("Vote", value).catch(function (err) {
+            return console.error(err.toString());
+        }).then(() => {
+            $("#vote-value").val('');
+            $(".voting").hide();
+        });
+    }
+    e.preventDefault();
+});
+
+$("#start-vote").click(e => {
+    connection.invoke("StartNewVote", 'teste').catch(function (err) {
+        return console.error(err.toString());
+    });
+    e.preventDefault();
+});
 //document.getElementById("sendButton").addEventListener("click", function (event) {
 //    var user = document.getElementById("userInput").value;
 //    var message = document.getElementById("messageInput").value;

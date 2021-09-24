@@ -7,13 +7,23 @@
 <h1>Room</h1>
 
 <div>
-    <div class="room">
+    <div class="room-members">
         <div class="owner" data="@Model.Room.OwnerUserId">
             <div class="user">King @Model.Room.OwnerName</div>
         </div>
         <div class="members">
 
         </div>
+    </div>
+    @if(Model.IsOwner)
+    {
+        <div class="vote-control">
+            <button id="start-vote">Start New Vote</button>
+        </div>
+    }
+    <div class="voting" style="display:none">
+        <input type="text" id="vote-value" placeholder="your vote" />
+        <button id="submit-vote">Submit</button>
     </div>
 </div>
 

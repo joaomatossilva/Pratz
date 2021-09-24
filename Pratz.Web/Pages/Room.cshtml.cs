@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,6 +21,8 @@ namespace Pratz.Web.Pages
         [BindProperty]
         public Room Room { get; set; }
 
+        public bool IsOwner { get; set; }
+
         public async Task<IActionResult> OnGet(string id)
         {
             //If first access is unauthenticated, ask for a name first
@@ -34,6 +37,7 @@ namespace Pratz.Web.Pages
                 return NotFound();
             }
 
+            IsOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == room.OwnerUserId;
             Room = room;
             return Page();
         }

@@ -18,7 +18,7 @@ namespace Pratz.Web
 
         public async Task Vote(string value)
         {
-            
+            logger.LogInformation("Value submitted", value);
         }
 
         public async override Task OnConnectedAsync()
@@ -39,11 +39,25 @@ namespace Pratz.Web
                     UserName = userName
                 });
 
-                //TODO: with other Repository implementations `room` might not have the member we just added, maybe retrieve Room again?
+                //TODO: with other Repository implementations `room` might not have the member we just added, maybe retrieve Room again? or handle this as business
             }
 
             logger.LogDebug("User Connected", roomId, userName, userId);
             await this.Clients.Group(roomId).SendAsync("UserJoined", room, userName);
+        }
+
+        public async Task StartNewVote(string name)
+        {
+            var roomId = Context.GetHttpContext().Request.Query["roomId"];
+            var room = await voteRoomRepository.GetRoom(roomId);
+            var userId = Context.UserIdentifier;
+            if(room.OwnerUserId != userId)
+            {
+                //only owners can start votes
+                return;
+            }
+
+            await this.Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("StartNewVote", name);
         }
     }
 }
