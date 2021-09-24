@@ -43,7 +43,7 @@ namespace Pratz.Web
             }
 
             logger.LogDebug("User Connected", roomId, userName, userId);
-            await this.Clients.All.SendAsync("UserJoined", room, userName);
+            await this.Clients.Group(roomId).SendAsync("UserJoined", room, userName);
         }
     }
 }
