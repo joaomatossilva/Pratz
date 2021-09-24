@@ -10,14 +10,9 @@ namespace Pratz.Web
         private readonly IVoteRoomRepository voteRoomRepository;
         private readonly ILogger<VotingHub> logger;
 
-        private VotingHub(IVoteRoomRepository voteRoomRepository)
+        public VotingHub(IVoteRoomRepository voteRoomRepository, ILogger<VotingHub> logger)
         {
             this.voteRoomRepository = voteRoomRepository;
-        }
-
-        //TODO: handle injection properly
-        public VotingHub(ILogger<VotingHub> logger)
-            :this(new InMemoryVoteRoomRepository()) {
             this.logger = logger;
         }
 
@@ -31,15 +26,24 @@ namespace Pratz.Web
             var roomId = Context.GetHttpContext().Request.Query["roomId"];
             await this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomId);
 
+            var room = await voteRoomRepository.GetRoom(roomId);
             var userName = this.Context.User.Identity.Name;
-            await voteRoomRepository.AddMember(roomId, new RoomMember
-            {
-                ConnectionId = Context.ConnectionId,
-                UserId = Context.UserIdentifier,
-                UserName = userName
-            });
+            var userId = Context.UserIdentifier;
 
-            await this.Clients.AllExcept(this.Context.ConnectionId).SendAsync("UserJoined", userName);
+            if (room.OwnerUserId != userId)
+            {
+                await voteRoomRepository.AddMember(roomId, new RoomMember
+                {
+                    ConnectionId = Context.ConnectionId,
+                    UserId = userId,
+                    UserName = userName
+                });
+
+                //TODO: with other Repository implementations `room` might not have the member we just added, maybe retrieve Room again?
+            }
+
+            logger.LogDebug("User Connected", roomId, userName, userId);
+            await this.Clients.All.SendAsync("UserJoined", room, userName);
         }
     }
 }

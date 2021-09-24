@@ -27,7 +27,10 @@ namespace Pratz.Web.Data
         public async Task AddMember(string id, RoomMember member)
         {
             var room = inMemoryCache[id];
-            room.Members.Add(member);
+            if (!room.Members.Any(x => x.UserId == member.UserId))
+            {
+                room.Members.Add(member);
+            }
         }
 
         public async Task RemoveMember(string id, string connectionId)

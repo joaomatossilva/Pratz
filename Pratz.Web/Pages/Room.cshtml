@@ -6,6 +6,17 @@
 
 <h1>Room</h1>
 
+<div>
+    <div class="room">
+        <div class="owner" data="@Model.Room.OwnerUserId">
+            <div class="user">King @Model.Room.OwnerName</div>
+        </div>
+        <div class="members">
+
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script type="text/javascript">
         var roomId = '@Model.Room.Id';

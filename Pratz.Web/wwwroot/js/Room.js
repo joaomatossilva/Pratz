@@ -1,12 +1,29 @@
-﻿//"use strict";
+﻿"use strict";
 
+//TODO: send this urls to config or sent by page
 var connection = new signalR.HubConnectionBuilder().withUrl("/votingHub?roomId=" + roomId).build();
 
 connection.on("ReceiveMessage", function (user, message) {
 });
 
-connection.on("UserJoined", function (userName) {
-    console.log('UserJoined', userName);
+connection.on("UserJoined", function (room, userName, userId) {
+    console.log('UserJoined', room, userName, userId);
+
+    var membersEl = $(".members");
+    room.members.map(member => {
+        console.log("processing member", member.userName, member.userId);
+        var userEl = membersEl.find(".user").filter(el => {
+            return el.data('id') === userId;
+        });
+        if (userEl.length === 0) {
+            userEl = jQuery('<div>', {
+                'data-id': member.userId,
+                class: 'user'
+            });
+            membersEl.append(userEl);
+            userEl.text(member.userName);
+        }
+    });
 });
 
 connection.start().then(function () {
