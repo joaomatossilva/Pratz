@@ -25,7 +25,7 @@ namespace Pratz.Web.Pages
             }
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost([FromQuery] string room)
         {
             var user = User;
             if(user?.Identity.IsAuthenticated == false)
@@ -50,7 +50,8 @@ namespace Pratz.Web.Pages
 
             //return SignIn(user, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(user);
-            return RedirectToPage("Index");
+
+            return !string.IsNullOrEmpty(room) ? RedirectToPage("Room", new {id = room}) : RedirectToPage("Index");
         }
 
     }
