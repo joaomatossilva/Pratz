@@ -64,6 +64,8 @@ namespace Pratz.Web
                 endpoints.MapRazorPages();
                 endpoints.MapHub<VotingHub>("/votingHub");
             });
+            app.Map("/qrcode", cnf => cnf.UseMiddleware<QrCodeMiddleware>());
         }
+        
     }
 }

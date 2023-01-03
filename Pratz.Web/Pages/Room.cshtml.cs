@@ -39,6 +39,7 @@ namespace Pratz.Web.Pages
 
             IsOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == room.OwnerUserId;
             Room = room;
+
             return Page();
         }
     }

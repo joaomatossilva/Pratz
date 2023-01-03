@@ -89,3 +89,7 @@ a.fork-me {
 .vote-value {
   margin: 0 0.3rem;
 }
+
+.qrcode {
+  width: 150px;
+}
