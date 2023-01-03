@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace Pratz.Web
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class VotingHub : Hub
     {
         private readonly IVoteRoomRepository voteRoomRepository;
@@ -19,6 +23,13 @@ namespace Pratz.Web
         public async Task Vote(string value)
         {
             logger.LogInformation("Value submitted", value);
+            var roomId = Context.GetHttpContext().Request.Query["roomId"];
+            
+            var userName = this.Context.User.Identity.Name;
+            var userId = Context.UserIdentifier;
+            var room = await voteRoomRepository.GetRoom(roomId);
+            
+            await this.Clients.User(room.OwnerUserId).SendAsync("VoteSubmitted", value, userName, userId);
         }
 
         public async override Task OnConnectedAsync()
@@ -57,7 +68,17 @@ namespace Pratz.Web
                 return;
             }
 
-            await this.Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("StartNewVote", name);
+            var vote = new Vote
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                RoomId = roomId,
+                MemberVotes = new Dictionary<string, string>(room.Members
+                    .Select(x => new KeyValuePair<string, string>(x.UserId, String.Empty))
+                )
+            };
+
+            await this.Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("StartNewVote", vote);
         }
     }
 }

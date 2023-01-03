@@ -26,7 +26,7 @@ connection.on("UserJoined", function (room, userName, userId) {
     });
 });
 
-connection.on("StartNewVote", (name) => {
+connection.on("StartNewVote", (vote) => {
     $(".voting").show();
 });
 
@@ -52,8 +52,35 @@ $("#submit-vote").click(e => {
 $("#start-vote").click(e => {
     connection.invoke("StartNewVote", 'teste').catch(function (err) {
         return console.error(err.toString());
+    }).then(() => {
+        $(".vote-responses").empty();
     });
     e.preventDefault();
+});
+
+$("#show-votes").click(e => {
+    $(".vote-value").show();
+    e.preventDefault();
+});
+
+connection.on("VoteSubmitted", function (value, userName, userId) {
+    console.log('VoteSubmitted', value, userName, userId);
+
+    var responsesEl = $(".vote-responses");
+    var responseEL = jQuery('<div>', {
+        'data-id': userId,
+        class: 'user'
+    });
+    var userNameEL = jQuery('<span>');
+    userNameEL.text(userName);
+    var voteValueEL = jQuery('<span>', {
+        class: 'vote-value',
+        style: 'display: none'
+    });
+    voteValueEL.text(value);
+    responsesEl.append(responseEL);
+    responseEL.append(userNameEL);
+    responseEL.append(voteValueEL);
 });
 //document.getElementById("sendButton").addEventListener("click", function (event) {
 //    var user = document.getElementById("userInput").value;
