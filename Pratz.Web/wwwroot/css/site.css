@@ -75,3 +75,11 @@ body {
   margin: 0.3rem 0;
   padding: 0.5rem 0;
 }
+
+.vote-response{
+  margin: 0.3rem 0;
+}
+
+.vote-value {
+  margin: 0 0.3rem;
+}

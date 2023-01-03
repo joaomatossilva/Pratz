@@ -69,12 +69,12 @@ connection.on("VoteSubmitted", function (value, userName, userId) {
     var responsesEl = $(".vote-responses");
     var responseEL = jQuery('<div>', {
         'data-id': userId,
-        class: 'user'
+        class: 'vote-response'
     });
     var userNameEL = jQuery('<span>');
     userNameEL.text(userName);
     var voteValueEL = jQuery('<span>', {
-        class: 'vote-value',
+        class: 'vote-value badge badge-secondary',
         style: 'display: none'
     });
     voteValueEL.text(value);

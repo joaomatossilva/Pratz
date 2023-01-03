@@ -6,9 +6,11 @@
 <div class="text-center">
     <h1 class="display-4">Your Profile</h1>
 
-    <form method="post">
-        <input type="text" name="userName" value="@Model.UserName" />
-        <button class="btn btn-primary">Set</button>
+    <form method="post" class="form-inline">
+        <div class="col-auto">
+            <input type="text" name="userName" class="form-control" value="@Model.UserName"/>
+            <button class="btn btn-primary">Set</button>
+        </div>
     </form>
 
 </div>
