@@ -9,7 +9,7 @@
 <div>
     <div class="room-members">
         <div class="owner" data="@Model.Room.OwnerUserId">
-            <div class="user">King @Model.Room.OwnerName</div>
+            <div class="user">(Owner) @Model.Room.OwnerName</div>
         </div>
         <div class="members">
 
@@ -18,8 +18,12 @@
     @if(Model.IsOwner)
     {
         <div class="vote-control">
-            <button id="start-vote" class="btn btn-primary">Start New Vote</button>
-            <button id="show-votes" class="btn btn-success">Show Votes</button>
+            <form class="form-inline border-info">
+                <div class="col-auto">
+                    <button id="start-vote" class="btn btn-primary">Start New Vote</button>
+                    <button id="show-votes" class="btn btn-success">Show Votes</button>
+                </div>
+            </form>
         </div>
         <div class="vote-responses">
         </div>
