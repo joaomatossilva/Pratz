@@ -4,9 +4,21 @@
     ViewData["Title"] = "Room";
 }
 
-<h1>Room</h1>
+<h1>Room <button class="btn btn-primary" data-toggle="modal" data-target="#qr-modal">QR core</button></h1>
 
-<img class="qrcode" src="/qrcode?room=@Model.Room.Id" alt="qrcode" />
+<div class="modal fade" id="qr-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img class="img-fluid" src="/qrcode?room=@Model.Room.Id" alt="qrcode" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div>
     <div class="room-members">
