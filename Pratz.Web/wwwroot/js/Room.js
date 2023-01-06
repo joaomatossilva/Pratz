@@ -22,12 +22,14 @@ connection.on("UserJoined", function (room, userName, userId) {
             });
             membersEl.append(userEl);
             userEl.text(member.userName);
+            toastr.success(member.userName + ' has joined the room', 'User Joined!');
         }
     });
 });
 
 connection.on("StartNewVote", (vote) => {
     $(".voting").show();
+    toastr.info('A new vote has started', 'New Vote!');
 });
 
 connection.start().then(function () {
@@ -44,6 +46,7 @@ $("#submit-vote").click(e => {
         }).then(() => {
             $("#vote-value").val('');
             $(".voting").hide();
+            toastr.success('Thank you for your vote', 'Success!');
         });
     }
     e.preventDefault();
@@ -54,6 +57,7 @@ $("#start-vote").click(e => {
         return console.error(err.toString());
     }).then(() => {
         $(".vote-responses").empty();
+        toastr.success('New Vote Started', 'Success!');
     });
     e.preventDefault();
 });
