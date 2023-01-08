@@ -32,15 +32,20 @@
     </div>
     @if(Model.IsOwner)
     {
+        <div id="votes-zone">
+            
+        </div>
+        
         <div class="vote-control">
             <form class="form-inline border-info">
                 <div class="col-auto">
-                    <button id="start-vote" class="btn btn-primary">Start New Vote</button>
+                    <input type="text" class="form-control" id="new-vote-name" placeholder="Vote Subject"/>
+                    <button id="start-vote" class="btn btn-primary">Start new Vote</button>
                     <button id="show-votes" class="btn btn-success">Show Votes</button>
                 </div>
             </form>
         </div>
-        <div class="vote-responses">
+        <div class="vote-cards">
         </div>
     }
     <div class="voting" style="display:none">
@@ -56,6 +61,15 @@
         </form>
     </div>
 </div>
+
+<template id="vote-template">
+    <div class="vote-card card">
+        <div class="card-body">
+            <span class="user-name">username</span>
+            <span class="badge badge-secondary" style="display: none"></span>
+        </div>
+    </div>
+</template>
 
 @section Scripts {
     <script type="text/javascript">

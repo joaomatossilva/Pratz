@@ -8,6 +8,7 @@ namespace Pratz.Web
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
 
     public class VotingHub : Hub
     {
@@ -57,15 +58,14 @@ namespace Pratz.Web
             await this.Clients.Group(roomId).SendAsync("UserJoined", room, userName);
         }
 
-        public async Task StartNewVote(string name)
+        public async Task<Vote> StartNewVote(string name)
         {
             var roomId = Context.GetHttpContext().Request.Query["roomId"];
             var room = await voteRoomRepository.GetRoom(roomId);
             var userId = Context.UserIdentifier;
             if(room.OwnerUserId != userId)
             {
-                //only owners can start votes
-                return;
+                throw new SecurityException("Insufficient permissions");
             }
 
             var vote = new Vote
@@ -79,6 +79,7 @@ namespace Pratz.Web
             };
 
             await this.Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("StartNewVote", vote);
+            return vote;
         }
     }
 }

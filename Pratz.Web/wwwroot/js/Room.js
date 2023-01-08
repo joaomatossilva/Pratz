@@ -55,9 +55,13 @@ $("#submit-vote").click(e => {
 $("#start-vote").click(e => {
     connection.invoke("StartNewVote", 'teste').catch(function (err) {
         return console.error(err.toString());
-    }).then(() => {
+    }).then((vote) => {
         $(".vote-responses").empty();
         toastr.success('New Vote Started', 'Success!');
+        console.log(vote);
+        var template = $("#vote-template");
+        //var voteCard = $("div", template);
+        $("#vote-cards").append(template);
     });
     e.preventDefault();
 });
