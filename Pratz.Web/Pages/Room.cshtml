@@ -41,37 +41,52 @@
                 <div class="col-auto">
                     <input type="text" class="form-control" id="new-vote-name" placeholder="Vote Subject"/>
                     <button id="start-vote" class="btn btn-primary">Start new Vote</button>
-                    <button id="show-votes" class="btn btn-success">Show Votes</button>
                 </div>
             </form>
         </div>
         <div class="vote-responses">
         </div>
     }
-    <div class="voting" style="display:none">
-        <form class="form-inline">
-            <div class="form-row">
-                <div class="col-auto">
-                    <input type="text" id="vote-value" placeholder="your vote" class="form-control"/>
-                </div>
-                <div class="col-auto">
-                    <button id="submit-vote" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
-        </form>
+    <div id="voting">
+        
     </div>
 </div>
 
+<template id="user-vote-template">
+    <div class="vote-card card" data-id="{{=it.id}}">
+        <div class="card-body vote-response">
+            <h5 class="card-title">{{=it.name}}</h5>
+            <div class="card-text voting-form">
+                <form class="form-inline">
+                    <div class="form-row">
+                        <div class="col-auto">
+                            <input type="text" id="vote-value" placeholder="your vote" class="form-control"/>
+                        </div>
+                        <div class="col-auto">
+                            <button id="submit-vote" class="btn btn-primary" type="button" onclick="submitVote('{{=it.id}}');return false;">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
 <template id="vote-template">
     <div class="vote-card card" data-id="{{=it.id}}">
-        <div class="card-title">
-            <span>{{=it.name}}</span>
-        </div>
         <div class="card-body vote-response">
+            <h5 class="card-title">{{=it.name}} <button id="show-votes" class="btn btn-success" type="button" onclick="showVotes('{{=it.id}}'); return false;"><i class="fa-solid fa-eye"></i></button></h5>
+            <div class="card-text vote-responses">
+                
+            </div>
         </div>
-        <div class="card-footer">
-            <button id="show-votes" class="btn btn-success">Show Votes</button>
-        </div>
+    </div>
+</template>
+
+<template id="user-vote-response-template">
+    <div class="vote-response" data-id="{{=it.userId}}">
+        <span>{{=it.userName}}</span>
+        <span class="vote-value badge badge-secondary" style="display: none">{{=it.value}}</span>
     </div>
 </template>
 

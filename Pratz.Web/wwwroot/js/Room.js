@@ -28,8 +28,13 @@ connection.on("UserJoined", function (room, userName, userId) {
 });
 
 connection.on("StartNewVote", (vote) => {
-    $(".voting").show();
+    //$(".voting").show();
     toastr.info('A new vote has started', 'New Vote!');
+    
+    var template = $("#user-vote-template").html();
+    var templateFn = doT.template(template);
+    var templateResult = templateFn(vote);
+    $("#voting").append($(templateResult));
 });
 
 connection.start().then(function () {
@@ -38,60 +43,65 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-$("#submit-vote").click(e => {
-    var value = $("#vote-value").val();
+const submitVote = (id) => {
+    var el = $(`.vote-card[data-id=${id}]`);
+    var form = $("form", el);
+    var value = $("input#vote-value", form).val();
     if (value.length > 0) {
-        connection.invoke("Vote", value).catch(function (err) {
+        connection.invoke("Vote", id, value).catch(function (err) {
             return console.error(err.toString());
         }).then(() => {
-            $("#vote-value").val('');
-            $(".voting").hide();
+            form.html('Vote Submitted');
             toastr.success('Thank you for your vote', 'Success!');
+        });
+    }
+}
+/*
+$("#submit-vote").click(e => {
+    
+    e.preventDefault();
+});
+*/
+
+$("#start-vote").click(e => {
+    var voteName = $("#new-vote-name").val();
+    if(voteName.length > 0) {
+        $("#new-vote-name").val('');
+        connection.invoke("StartNewVote", voteName).catch(function (err) {
+            return console.error(err.toString());
+        }).then((vote) => {
+            //$(".vote-responses").empty();
+            toastr.success('New Vote Started', 'Success!');
+            console.log(vote);
+            var template = $("#vote-template").html();
+            var templateFn = doT.template(template);
+            var templateResult = templateFn(vote);
+            $("#votes-cards").append($(templateResult));
         });
     }
     e.preventDefault();
 });
 
-$("#start-vote").click(e => {
-    var voteName = $("#new-vote-name").val();
-    $("#new-vote-name").val('');
-    connection.invoke("StartNewVote", voteName).catch(function (err) {
-        return console.error(err.toString());
-    }).then((vote) => {
-        //$(".vote-responses").empty();
-        toastr.success('New Vote Started', 'Success!');
-        console.log(vote);
-        var template = $("#vote-template").html();
-        var templateFn = doT.template(template);
-        var templateResult = templateFn(vote);
-        $("#votes-cards").append($(templateResult));
-    });
-    e.preventDefault();
-});
-
+const showVotes = (id) => {
+    var card = $(`.vote-card[data-id=${id}]`);
+    $(".vote-value", card).show();
+};
+/*
 $("#show-votes").click(e => {
     $(".vote-value").show();
     e.preventDefault();
 });
+*/
 
-connection.on("VoteSubmitted", function (value, userName, userId) {
+
+connection.on("VoteSubmitted", function (id, value, userName, userId) {
     console.log('VoteSubmitted', value, userName, userId);
 
-    var responsesEl = $(".vote-responses");
-    var responseEL = jQuery('<div>', {
-        'data-id': userId,
-        class: 'vote-response'
-    });
-    var userNameEL = jQuery('<span>');
-    userNameEL.text(userName);
-    var voteValueEL = jQuery('<span>', {
-        class: 'vote-value badge badge-secondary',
-        style: 'display: none'
-    });
-    voteValueEL.text(value);
-    responsesEl.append(responseEL);
-    responseEL.append(userNameEL);
-    responseEL.append(voteValueEL);
+    var responsesEl = $(`.vote-card[data-id=${id}]`);
+    var template = $("#user-vote-response-template").html();
+    var templateFn = doT.template(template);
+    var templateResult = templateFn({ userName: userName, userId: userId, value: value });
+    $(".vote-responses", responsesEl).append($(templateResult));
 });
 //document.getElementById("sendButton").addEventListener("click", function (event) {
 //    var user = document.getElementById("userInput").value;

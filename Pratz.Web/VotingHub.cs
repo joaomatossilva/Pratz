@@ -21,7 +21,7 @@ namespace Pratz.Web
             this.logger = logger;
         }
 
-        public async Task Vote(string value)
+        public async Task Vote(string id, string value)
         {
             logger.LogInformation("Value submitted", value);
             var roomId = Context.GetHttpContext().Request.Query["roomId"];
@@ -30,7 +30,8 @@ namespace Pratz.Web
             var userId = Context.UserIdentifier;
             var room = await voteRoomRepository.GetRoom(roomId);
             
-            await this.Clients.User(room.OwnerUserId).SendAsync("VoteSubmitted", value, userName, userId);
+            //todo: pass an object instead of parameters
+            await this.Clients.User(room.OwnerUserId).SendAsync("VoteSubmitted", id, value, userName, userId);
         }
 
         public async override Task OnConnectedAsync()
