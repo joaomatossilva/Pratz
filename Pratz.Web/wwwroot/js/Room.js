@@ -53,15 +53,18 @@ $("#submit-vote").click(e => {
 });
 
 $("#start-vote").click(e => {
-    connection.invoke("StartNewVote", 'teste').catch(function (err) {
+    var voteName = $("#new-vote-name").val();
+    $("#new-vote-name").val('');
+    connection.invoke("StartNewVote", voteName).catch(function (err) {
         return console.error(err.toString());
     }).then((vote) => {
-        $(".vote-responses").empty();
+        //$(".vote-responses").empty();
         toastr.success('New Vote Started', 'Success!');
         console.log(vote);
-        var template = $("#vote-template");
-        //var voteCard = $("div", template);
-        $("#vote-cards").append(template);
+        var template = $("#vote-template").html();
+        var templateFn = doT.template(template);
+        var templateResult = templateFn(vote);
+        $("#votes-cards").append($(templateResult));
     });
     e.preventDefault();
 });

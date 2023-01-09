@@ -32,7 +32,7 @@
     </div>
     @if(Model.IsOwner)
     {
-        <div id="votes-zone">
+        <div id="votes-cards">
             
         </div>
         
@@ -45,7 +45,7 @@
                 </div>
             </form>
         </div>
-        <div class="vote-cards">
+        <div class="vote-responses">
         </div>
     }
     <div class="voting" style="display:none">
@@ -63,10 +63,14 @@
 </div>
 
 <template id="vote-template">
-    <div class="vote-card card">
-        <div class="card-body">
-            <span class="user-name">username</span>
-            <span class="badge badge-secondary" style="display: none"></span>
+    <div class="vote-card card" data-id="{{=it.id}}">
+        <div class="card-title">
+            <span>{{=it.name}}</span>
+        </div>
+        <div class="card-body vote-response">
+        </div>
+        <div class="card-footer">
+            <button id="show-votes" class="btn btn-success">Show Votes</button>
         </div>
     </div>
 </template>
